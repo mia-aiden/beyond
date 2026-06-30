@@ -1,0 +1,5 @@
+enabled: false
+model: gpt-4.1-mini
+temperature: 0
+max_retries: 3
+cache_dir: evaluation/outputs/judge_cache

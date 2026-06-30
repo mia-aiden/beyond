@@ -1,0 +1,15 @@
+Source text:
+{{ source_text }}
+
+Reference narrative:
+{{ reference_narrative }}
+
+Predicted narrative:
+{{ predicted_narrative }}
+
+Return JSON with:
+- relevance_score
+- faithfulness_score
+- coherence_score
+- nli_label
+- brief_reason

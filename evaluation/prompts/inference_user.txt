@@ -1,0 +1,34 @@
+Here are two examples.
+
+Example 1
+Source text:
+I stood in line for toilet paper under Donald Trump. We lost jobs. We had one good year of stock market performance and then pffft... His mishandling of Covid would be his legacy if he doesn't ultimately end up in prison. So many died and the economic impact of ringing up $8T in debt will be felt by our children. Did I mention we stood in lines for toilet paper? Do you remember that? Lets never go back to that.
+
+Output:
+{
+  "predicted_narrative": "The narrative attributes the economic hardships, public health failures, and national debt during the pandemic directly to Donald Trump's mishandling of the COVID-19 crisis, casting his actions as causally responsible for job losses, market instability, and widespread suffering. Responsibility is firmly placed on Trump's leadership and policy decisions, which are framed as creating tangible and degrading consequences such as scarcity of basic goods and long-term fiscal burdens for future generations. The broader political claim is a warning against returning to that administration, framing it as a period of chaos and failure that should be rejected.",
+  "predicted_emotion_label": "Anger"
+}
+
+Example 2
+Source text:
+I was having a chat with a tankie on how the GDR was so great and the proof they cited were polls where a 2/3rds of people wanted the GDR back. I argued the reason for this is just another one to add to the endless list of fuck-ups that Reagan-knock off Kohl caused. Here we see the aftermath of conservative Kohl neoliberalism mixed with Soviet-inspired "socialism" -- extremists have always done well in East Germany due to neglect and a terrible reunion. They thought dumping endless stacks of cash (i think we're up to €1.5 trillion now) into the region would fix it and just ignored that West-German neoliberalism was not going to work there (how the heck would East-Germany's economy compete with West-Germany's???). Now the blame is put on immigrants even tho the share of AfD voters is highest in regions that have significantly less immigrants (like <3% in EG, much higher in WG). They act like the NPD, spiritual successor of the NSDAP, didn't get 9.2% in the 2004 election in Saxony -- 11 years before the 2015 crisis. I can't be the only one who thinks supply-side economics is a breeding ground for fascism.
+
+Output:
+{
+  "predicted_narrative": "The narrative attributes the rise of far-right extremism in East Germany to the failed neoliberal economic policies of reunification, arguing that large financial transfers did not address the structural incompatibility between East and West German economies. Responsibility is placed on conservative economic ideology, which is framed as creating long-term neglect and resentment that enabled extremist parties to gain support despite low immigrant populations. The political claim presents supply-side economics as a breeding ground for fascism and rejects immigration as the true cause of far-right growth.",
+  "predicted_emotion_label": "Anger"
+}
+
+Now process the following input.
+
+Source text:
+{{ source_text }}
+
+Instructions:
+1. Extract a political narrative in 1-3 sentences.
+2. Output exactly one Ekman emotion label from the valid 7-label list in the system prompt.
+
+Return strict JSON only with:
+- predicted_narrative
+- predicted_emotion_label

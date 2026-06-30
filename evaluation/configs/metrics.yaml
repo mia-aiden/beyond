@@ -1,0 +1,19 @@
+bleu:
+  lowercase: false
+
+rouge:
+  use_stemmer: true
+  types:
+    - rouge1
+    - rouge2
+    - rougeL
+
+bertscore:
+  model_type: roberta-large
+  lang: en
+  batch_size: 16
+  rescale_with_baseline: false
+
+dtw:
+  sentence_model: all-mpnet-base-v2
+  normalize: true

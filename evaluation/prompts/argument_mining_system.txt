@@ -1,0 +1,7 @@
+You are an argument mining assistant.
+Return strict JSON only.
+For the predicted narrative, identify whether it contains:
+- a claim
+- a reason
+- a stance marker
+- an overall argumentative_strength

@@ -1,0 +1,21 @@
+*.csv
+.env
+.venv/
+__pycache__/
+*.pyc
+/data/
+*.parquet
+*.pdf
+*.json
+*pipeline.md
+*script_overview.md
+evaluation/**/*.md
+evaluation/**/*.j2
+
+# macOS / Windows junk files
+.DS_Store
+*.DS_Store
+Thumbs.db
+desktop.ini
+*.png
+outputs*

@@ -1,0 +1,12 @@
+enabled: false
+model_path: ""
+device: auto
+torch_dtype: auto
+max_new_tokens: 256
+temperature: 0.0
+top_p: 1.0
+do_sample: false
+batch_size: 1
+trust_remote_code: false
+pad_token_fallback: eos
+output_json_required: true
