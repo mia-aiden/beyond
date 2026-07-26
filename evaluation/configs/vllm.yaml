@@ -1,0 +1,25 @@
+model_path: ""
+served_model_name: narrative-model
+
+# OpenAI-compatible server connection
+base_url: http://127.0.0.1:8000/v1
+api_key: EMPTY
+request_timeout_seconds: 180
+max_retries: 2
+concurrency: 8
+
+# Generation
+max_tokens: 384
+temperature: 0.0
+top_p: 1.0
+
+# vLLM server launch settings used by serve_vllm.py
+host: 0.0.0.0
+port: 8000
+dtype: bfloat16
+tensor_parallel_size: 1
+gpu_memory_utilization: 0.9
+max_model_len: 4096
+trust_remote_code: false
+chat_template: ""
+server_api_key: ""

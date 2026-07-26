@@ -11,6 +11,7 @@ __pycache__/
 *script_overview.md
 evaluation/**/*.md
 evaluation/**/*.j2
+!evaluation/README.md
 
 # macOS / Windows junk files
 .DS_Store

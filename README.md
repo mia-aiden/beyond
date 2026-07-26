@@ -9,3 +9,12 @@ We run BERTopic on this 50,000-comment sample to obtain semantic clusters. Since
 For each BERTopic cluster, we construct a cluster text by combining its topic name, top terms, and representative documents. We encode both the cluster texts and the CAP prototypes with the same sentence-transformer model, compute cosine similarity, and keep the top 3 CAP candidates for each cluster. We then manually review these candidates and group clusters into `direct_political`, `borderline`, and `non_political`.
 
 Our current exported political-topic subset keeps all `direct_political` clusters plus selected borderline clusters. This yields `15,233` comments in `clustering/reddit_narratives_selected_political_comments.csv`, which serves as the current political-topic subset for downstream annotation and modeling.
+
+## Evaluation
+
+The `evaluation/` subsystem evaluates political narrative generation and
+seven-class Ekman emotion prediction. It accepts an existing prediction CSV,
+local Transformers inference, or structured-output inference through a deployed
+vLLM server.
+
+See `evaluation/README.md` for data schemas, configuration, and commands.

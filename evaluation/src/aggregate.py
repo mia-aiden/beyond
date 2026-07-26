@@ -15,6 +15,7 @@ DEFAULT_REPORT_TEMPLATE = """# Evaluation Report
 - Prediction file: `{{ summary.pred_path }}`
 - Inference mode: {{ summary.inference_mode }}
 {% if summary.inference_mode %}
+- Inference backend: {{ summary.inference_backend }}
 - Model path: `{{ summary.model_path }}`
 - Generation failures: {{ summary.num_generation_failures }}
 {% endif %}
@@ -79,6 +80,7 @@ def build_summary(
     gold_path: Path,
     pred_path: Path,
     inference_mode: bool,
+    inference_backend: str,
     model_path: str,
     num_generation_failures: int,
     num_gold_rows: int,
@@ -99,6 +101,7 @@ def build_summary(
         "gold_path": str(gold_path),
         "pred_path": str(pred_path),
         "inference_mode": inference_mode,
+        "inference_backend": inference_backend,
         "model_path": model_path,
         "num_generation_failures": num_generation_failures,
         "num_gold_rows": num_gold_rows,

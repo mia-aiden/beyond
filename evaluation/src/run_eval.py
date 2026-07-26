@@ -12,7 +12,6 @@ if str(CURRENT_DIR) not in sys.path:
 import pandas as pd
 
 from aggregate import build_summary, merge_per_sample_metrics, write_report, write_summary_json
-from inference_local import generate_predictions
 from io_utils import ensure_dir, load_yaml, timestamp_string
 from metric_argument import run_argument_mining
 from metric_emotion import compute_emotion_metrics
@@ -31,11 +30,17 @@ EVAL_ROOT = PROJECT_ROOT / "evaluation"
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run narrative + emotion evaluation.")
     parser.add_argument("--gold", type=Path, help="Gold/reference CSV path.")
-    parser.add_argument("--pred", type=Path, help="Prediction CSV path.")
-    parser.add_argument(
+    mode_group = parser.add_mutually_exclusive_group()
+    mode_group.add_argument("--pred", type=Path, help="Prediction CSV path.")
+    mode_group.add_argument(
         "--inference",
         action="store_true",
         help="Run local Hugging Face inference before evaluation.",
+    )
+    mode_group.add_argument(
+        "--vllm-inference",
+        action="store_true",
+        help="Run structured-output inference through a deployed vLLM server.",
     )
     parser.add_argument("--output-root", type=Path, default=EVAL_ROOT / "outputs", help="Output root directory.")
     parser.add_argument("--run-defaults", type=Path, default=EVAL_ROOT / "configs" / "run_defaults.yaml")
@@ -43,6 +48,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--judge-config", type=Path, default=EVAL_ROOT / "configs" / "judge.yaml")
     parser.add_argument("--manual-config", type=Path, default=EVAL_ROOT / "configs" / "manual_eval.yaml")
     parser.add_argument("--inference-config", type=Path, default=EVAL_ROOT / "configs" / "inference.yaml")
+    parser.add_argument("--vllm-config", type=Path, default=EVAL_ROOT / "configs" / "vllm.yaml")
     return parser.parse_args()
 
 
@@ -69,16 +75,17 @@ def main() -> None:
     judge_config = load_yaml(args.judge_config)
     manual_config = load_yaml(args.manual_config)
     inference_config = load_yaml(args.inference_config)
+    vllm_config = load_yaml(args.vllm_config)
     gold_path = _resolve_path(args.gold, str(run_defaults.get("default_gold_path", "")))
     pred_input_path = _resolve_path(args.pred, str(run_defaults.get("default_prediction_path", "")))
+    generation_mode = bool(args.inference or args.vllm_inference)
 
     if gold_path is None:
         raise SystemExit("Gold path is required. Pass --gold or set default_gold_path in run_defaults.yaml.")
-    if args.inference and args.pred is not None:
-        raise SystemExit("Use either --pred or --inference, not both.")
-    if not args.inference and pred_input_path is None:
+    if not generation_mode and pred_input_path is None:
         raise SystemExit(
-            "Prediction path is required in evaluation mode. Pass --pred or set default_prediction_path in run_defaults.yaml."
+            "Select --inference/--vllm-inference, pass --pred, or set "
+            "default_prediction_path in run_defaults.yaml."
         )
 
     run_timestamp = timestamp_string()
@@ -91,6 +98,8 @@ def main() -> None:
     try:
         gold_df = load_gold_with_sample_ids(gold_path)
         if args.inference:
+            from inference_local import generate_predictions
+
             pred_df = generate_predictions(
                 gold_df,
                 config=inference_config,
@@ -100,11 +109,31 @@ def main() -> None:
             pred_path = predictions_dir / "generated_predictions.csv"
             pred_df.to_csv(pred_path, index=False, encoding="utf-8-sig")
             pred_df = load_prediction(pred_path)
+            inference_backend = "transformers"
+            inference_model_path = str(inference_config.get("model_path", ""))
+        elif args.vllm_inference:
+            from inference_vllm import generate_vllm_predictions
+
+            pred_df = generate_vllm_predictions(
+                gold_df,
+                config=vllm_config,
+                system_prompt_path=EVAL_ROOT / "prompts" / "inference_system.txt",
+                user_prompt_path=EVAL_ROOT / "prompts" / "inference_user.txt",
+            )
+            pred_path = predictions_dir / "generated_predictions.csv"
+            pred_df.to_csv(pred_path, index=False, encoding="utf-8-sig")
+            pred_df = load_prediction(pred_path)
+            inference_backend = "vllm"
+            inference_model_path = str(
+                vllm_config.get("model_path") or vllm_config.get("served_model_name", "")
+            )
         else:
             pred_path = pred_input_path
             pred_df = load_prediction(pred_input_path)
+            inference_backend = "prediction_csv"
+            inference_model_path = ""
         alignment = align_gold_and_prediction(gold_df, pred_df)
-    except ValidationError as exc:
+    except (ValidationError, ValueError, RuntimeError) as exc:
         raise SystemExit(str(exc)) from exc
 
     alignment.gold_df.to_csv(metrics_dir / "gold_with_sample_ids.csv", index=False, encoding="utf-8-sig")
@@ -125,7 +154,7 @@ def main() -> None:
         )
 
     num_generation_failures = 0
-    if args.inference and "parse_success" in pred_df.columns:
+    if generation_mode and "parse_success" in pred_df.columns:
         num_generation_failures = int((~pred_df["parse_success"].astype(bool)).sum())
 
     automatic_per_sample_df = pd.DataFrame({"sample_id": alignment.aligned_df["sample_id"]})
@@ -230,8 +259,9 @@ def main() -> None:
         run_timestamp=run_timestamp,
         gold_path=gold_path,
         pred_path=pred_path,
-        inference_mode=bool(args.inference),
-        model_path=str(inference_config.get("model_path", "")) if args.inference else "",
+        inference_mode=generation_mode,
+        inference_backend=inference_backend,
+        model_path=inference_model_path,
         num_generation_failures=num_generation_failures,
         num_gold_rows=len(alignment.gold_df),
         num_prediction_rows=len(alignment.pred_df),
