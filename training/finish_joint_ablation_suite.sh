@@ -30,10 +30,10 @@ done
 
 source "$CONDA_SH"
 conda activate vllm-eval
-python "${PROJECT_ROOT}/training/compare_joint_lambdas.py"
+python "${PROJECT_ROOT}/analysis/compare_joint_lambdas.py"
 
 mkdir -p "${ABLATION_ROOT}/artifacts"
-cp "${PROJECT_ROOT}/training/compare_joint_lambdas.py" "${ABLATION_ROOT}/artifacts/"
+cp "${PROJECT_ROOT}/analysis/compare_joint_lambdas.py" "${ABLATION_ROOT}/artifacts/"
 cp "${PROJECT_ROOT}/training/finish_joint_ablation.sh" "${ABLATION_ROOT}/artifacts/"
 cp "${PROJECT_ROOT}/training/finish_joint_ablation_suite.sh" "${ABLATION_ROOT}/artifacts/"
 cp "${PROJECT_ROOT}/training/configs/joint_lambda_03.yaml" "${ABLATION_ROOT}/artifacts/"

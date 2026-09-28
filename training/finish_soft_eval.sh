@@ -34,7 +34,7 @@ for v in soft_emotion soft_shared; do for ds in stage1 manual; do
 done; done
 
 rundir(){ ls -d "$1"/run_* 2>/dev/null | tail -1; }
-boot(){ [ -n "$1" ] && [ -n "$2" ] && python "$PR/training/paired_bootstrap_narrative.py" \
+boot(){ [ -n "$1" ] && [ -n "$2" ] && python "$PR/analysis/paired_bootstrap_narrative.py" \
   --model-a-run "$1" --model-b-run "$2" --model-a-name "$3" --model-b-name "$4" --dataset "$5" --output-dir "$6" >/dev/null 2>&1; }
 echo "[soft] bootstrap..."
 for ds in stage1 manual; do

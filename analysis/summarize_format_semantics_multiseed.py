@@ -3,19 +3,22 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import math
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import matplotlib
 
-from paths import EXPERIMENTS_DIR
-
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy import stats
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "training"))
+from paths import EXPERIMENTS_DIR  # noqa: E402
 
 
 EXPERIMENT_DIR = EXPERIMENTS_DIR / "format_semantics_multiseed"
@@ -678,6 +681,11 @@ def build_report(
 
 
 def main() -> None:
+    global RESULTS_DIR, PLOTS_DIR
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output-dir", type=Path, default=RESULTS_DIR)
+    RESULTS_DIR = parser.parse_args().output_dir
+    PLOTS_DIR = RESULTS_DIR / "plots"
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     PLOTS_DIR.mkdir(parents=True, exist_ok=True)
     seed_metrics = load_seed_metrics()

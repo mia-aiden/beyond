@@ -3,15 +3,18 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import math
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from scipy import stats
 
-from paths import EXPERIMENTS_DIR
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "training"))
+from paths import EXPERIMENTS_DIR  # noqa: E402
 
 
 ROOT = EXPERIMENTS_DIR
@@ -256,6 +259,10 @@ def build_report(summary: pd.DataFrame, paired: pd.DataFrame, hierarchical: pd.D
 
 
 def main() -> None:
+    global RESULTS_DIR
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output-dir", type=Path, default=RESULTS_DIR)
+    RESULTS_DIR = parser.parse_args().output_dir
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     seed_metrics = load_seed_metrics()
     summary = condition_summary(seed_metrics)

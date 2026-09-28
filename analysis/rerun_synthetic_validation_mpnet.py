@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -15,7 +16,8 @@ from sentence_transformers import SentenceTransformer
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 
-from paths import EXPERIMENTS_DIR, STAGE1_TEST, MANUAL_TEST, TRAIN_POOL
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "training"))
+from paths import EXPERIMENTS_DIR, STAGE1_TEST, MANUAL_TEST, TRAIN_POOL  # noqa: E402
 
 
 MODEL_NAME = "all-mpnet-base-v2"

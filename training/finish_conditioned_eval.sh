@@ -33,7 +33,7 @@ echo "[finish] metrics done; running paired bootstrap vs Model B..."
 
 boot () {
   local arun; arun=$(ls -d "$CE/$1/$2/evaluation"/run_* 2>/dev/null | tail -1)
-  python "$PR/training/paired_bootstrap_narrative.py" \
+  python "$PR/analysis/paired_bootstrap_narrative.py" \
     --model-a-run "$arun" --model-b-run "$3" \
     --model-a-name "$1" --model-b-name model_b --dataset "$2" \
     --output-dir "$CE/bootstrap/${1}_vs_b_${2}"

@@ -41,7 +41,7 @@ for t in $TAGS; do
     python "$PR/evaluation/src/run_eval.py" --gold "$gold" --pred "$CE/$t/$ds/predictions/pred.csv" \
       --run-defaults "$PR/training/configs/run_narrative_eval.yaml" --output-root "$CE/$t/$ds/evaluation"
     arun=$(ls -d "$CE/$t/$ds/evaluation"/run_* 2>/dev/null | tail -1)
-    python "$PR/training/paired_bootstrap_narrative.py" --model-a-run "$arun" --model-b-run "$mb" \
+    python "$PR/analysis/paired_bootstrap_narrative.py" --model-a-run "$arun" --model-b-run "$mb" \
       --model-a-name "$t" --model-b-name model_b --dataset "$ds" --output-dir "$CE/bootstrap/${t}_vs_b_${ds}"
   done
 done

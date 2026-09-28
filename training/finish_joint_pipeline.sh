@@ -43,7 +43,7 @@ cp "${PROJECT_ROOT}/training/infer_sft_task_transformers.py" "${ARTIFACT_ROOT}/c
 cp "${PROJECT_ROOT}/training/run_joint_eval.sh" "${ARTIFACT_ROOT}/code/"
 cp "${PROJECT_ROOT}/training/run_joint_evaluation_suite.sh" "${ARTIFACT_ROOT}/code/"
 cp "${PROJECT_ROOT}/training/finish_joint_pipeline.sh" "${ARTIFACT_ROOT}/code/"
-cp "${PROJECT_ROOT}/training/compare_model_abc.py" "${ARTIFACT_ROOT}/code/"
+cp "${PROJECT_ROOT}/analysis/compare_model_abc.py" "${ARTIFACT_ROOT}/code/"
 cp "${PROJECT_ROOT}/training/build_model_c_report.py" "${ARTIFACT_ROOT}/code/"
 cp "${PROJECT_ROOT}/training/README.md" "${ARTIFACT_ROOT}/code/"
 cp "${PROJECT_ROOT}/training/configs/joint_sft.yaml" "${ARTIFACT_ROOT}/code/"

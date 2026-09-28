@@ -39,7 +39,7 @@ VLLM = VLLM_BIN
 INFERENCE_SCRIPT = PROJECT_ROOT / "training" / "infer_sft_task_vllm.py"
 EVAL_SCRIPT = PROJECT_ROOT / "evaluation" / "src" / "run_eval.py"
 RUN_DEFAULTS = PROJECT_ROOT / "training" / "configs" / "run_narrative_eval.yaml"
-SUMMARY_SCRIPT = PROJECT_ROOT / "training" / "summarize_format_semantics_multiseed.py"
+SUMMARY_SCRIPT = PROJECT_ROOT / "analysis" / "summarize_format_semantics_multiseed.py"
 DATASETS = {
     "stage1": STAGE1_TEST,
     "manual": MANUAL_TEST,

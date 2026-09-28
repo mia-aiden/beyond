@@ -3,10 +3,12 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
-from paths import EXPERIMENTS_DIR
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "training"))
+from paths import EXPERIMENTS_DIR  # noqa: E402
 
 
 DEFAULT_ROOT = EXPERIMENTS_DIR

@@ -38,7 +38,7 @@ echo "Model C evaluation suite started at $(date --iso-8601=seconds)"
 
 source "$CONDA_SH"
 conda activate vllm-eval
-python "${PROJECT_ROOT}/training/compare_model_abc.py"
+python "${PROJECT_ROOT}/analysis/compare_model_abc.py"
 
 date --iso-8601=seconds > "${FS_ROOT}/MODEL_C_EVALUATION_COMPLETE"
 echo "Model C evaluation suite completed at $(date --iso-8601=seconds)"
