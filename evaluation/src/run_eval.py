@@ -171,7 +171,7 @@ def main() -> None:
             bertscore_lang=metrics_config["bertscore"]["lang"],
             bertscore_batch_size=metrics_config["bertscore"]["batch_size"],
             bertscore_rescale_with_baseline=metrics_config["bertscore"]["rescale_with_baseline"],
-            dtw_sentence_model=metrics_config["dtw"]["sentence_model"],
+            dtw_sentence_model=metrics_config["sentence_embeddings"]["model"],
         )
         automatic_per_sample_df = merge_per_sample_metrics(
             automatic_per_sample_df, [ngram_per_sample_df, semantic_per_sample_df]
@@ -249,7 +249,12 @@ def main() -> None:
     )
     per_sample_metrics_df.to_csv(metrics_dir / "per_sample_metrics.csv", index=False, encoding="utf-8-sig")
 
-    if not automatic_per_sample_df.empty:
+    narrative_plot_columns = {
+        "rouge1_fmeasure",
+        "bertscore_f1",
+        "normalized_dtw_distance",
+    }
+    if narrative_plot_columns.issubset(automatic_per_sample_df.columns):
         plot_narrative_distributions(automatic_per_sample_df, plots_dir)
     plot_length_distribution(alignment.aligned_df, plots_dir / "length_distribution.png")
     if not emotion_matrix_df.empty:

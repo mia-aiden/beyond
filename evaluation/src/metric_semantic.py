@@ -31,6 +31,33 @@ def _compute_dtw_distance(ref_embeddings: np.ndarray, pred_embeddings: np.ndarra
     return raw_distance, normalized
 
 
+def _encode_sentence_groups(
+    sentence_model: SentenceTransformer,
+    groups: list[list[str]],
+) -> list[np.ndarray]:
+    flat_sentences = [sentence for group in groups for sentence in group]
+    if hasattr(sentence_model, "get_embedding_dimension"):
+        embedding_dimension = sentence_model.get_embedding_dimension()
+    else:
+        embedding_dimension = sentence_model.get_sentence_embedding_dimension()
+    if not flat_sentences:
+        return [np.empty((0, embedding_dimension), dtype=np.float32) for _ in groups]
+
+    flat_embeddings = sentence_model.encode(
+        flat_sentences,
+        batch_size=64,
+        convert_to_numpy=True,
+        show_progress_bar=False,
+    )
+    encoded_groups = []
+    offset = 0
+    for group in groups:
+        next_offset = offset + len(group)
+        encoded_groups.append(flat_embeddings[offset:next_offset])
+        offset = next_offset
+    return encoded_groups
+
+
 def compute_semantic_metrics(
     eval_df: pd.DataFrame,
     *,
@@ -68,17 +95,19 @@ def compute_semantic_metrics(
             bert_f1[idx] = float(f1_score)
 
     sentence_model = SentenceTransformer(dtw_sentence_model)
+    reference_sentence_groups = [split_sentences(reference) for reference in references]
+    prediction_sentence_groups = [split_sentences(prediction) for prediction in predictions]
+    all_encoded_groups = _encode_sentence_groups(
+        sentence_model,
+        reference_sentence_groups + prediction_sentence_groups,
+    )
+    reference_embedding_groups = all_encoded_groups[: len(reference_sentence_groups)]
+    prediction_embedding_groups = all_encoded_groups[len(reference_sentence_groups) :]
 
     for row_index, sample_id in enumerate(eval_df["sample_id"].tolist()):
-        reference = references[row_index]
-        prediction = predictions[row_index]
-
-        ref_sentences = split_sentences(reference)
-        pred_sentences = split_sentences(prediction)
-
-        if ref_sentences and pred_sentences:
-            ref_embeddings = sentence_model.encode(ref_sentences, convert_to_numpy=True)
-            pred_embeddings = sentence_model.encode(pred_sentences, convert_to_numpy=True)
+        ref_embeddings = reference_embedding_groups[row_index]
+        pred_embeddings = prediction_embedding_groups[row_index]
+        if len(ref_embeddings) and len(pred_embeddings):
             dtw_distance, normalized_dtw_distance = _compute_dtw_distance(ref_embeddings, pred_embeddings)
         else:
             dtw_distance, normalized_dtw_distance = math.nan, math.nan

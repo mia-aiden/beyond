@@ -23,8 +23,31 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 EVAL_ROOT = PROJECT_ROOT / "evaluation"
 
 
-def _batched(items: list[Any], batch_size: int) -> list[list[Any]]:
-    return [items[index:index + batch_size] for index in range(0, len(items), batch_size)]
+def _batched(
+    items: list[Any],
+    batch_size: int,
+    tokenizer: Any,
+    max_batch_tokens: int,
+) -> list[list[Any]]:
+    if max_batch_tokens <= 0:
+        return [items[index:index + batch_size] for index in range(0, len(items), batch_size)]
+
+    batches: list[list[Any]] = []
+    current: list[Any] = []
+    current_max_tokens = 0
+    for item in items:
+        token_count = len(tokenizer(item["prompt"], add_special_tokens=False)["input_ids"])
+        candidate_max_tokens = max(current_max_tokens, token_count)
+        candidate_padded_tokens = candidate_max_tokens * (len(current) + 1)
+        if current and (len(current) >= batch_size or candidate_padded_tokens > max_batch_tokens):
+            batches.append(current)
+            current = []
+            current_max_tokens = 0
+        current.append(item)
+        current_max_tokens = max(current_max_tokens, token_count)
+    if current:
+        batches.append(current)
+    return batches
 
 
 def _resolve_device(device: str) -> str:
@@ -85,6 +108,7 @@ def generate_predictions(
     rows: list[dict[str, Any]] = []
 
     batch_size = max(1, int(config.get("batch_size", 1)))
+    max_batch_tokens = max(0, int(config.get("max_batch_tokens", 0)))
     max_new_tokens = int(config.get("max_new_tokens", 256))
     temperature = float(config.get("temperature", 0.0))
     top_p = float(config.get("top_p", 1.0))
@@ -102,14 +126,28 @@ def generate_predictions(
     prompt_rows = []
     for row in gold_df.itertuples(index=False):
         user_prompt = render_template(user_prompt_path, source_text=row.source_text)
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ]
+        if tokenizer.chat_template:
+            prompt = tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
+            )
+        else:
+            prompt = f"{system_prompt}\n\n{user_prompt}"
         prompt_rows.append(
             {
                 "sample_id": row.sample_id,
-                "prompt": f"{system_prompt}\n\n{user_prompt}",
+                "prompt": prompt,
             }
         )
 
-    for batch in _batched(prompt_rows, batch_size):
+    for batch in _batched(
+        prompt_rows, batch_size, tokenizer, max_batch_tokens
+    ):
         prompts = [item["prompt"] for item in batch]
         inputs = tokenizer(prompts, return_tensors="pt", padding=True).to(device)
         with torch.no_grad():
@@ -118,9 +156,9 @@ def generate_predictions(
                 **generation_kwargs,
             )
 
-        prompt_lengths = inputs["attention_mask"].sum(dim=1).tolist()
+        input_width = inputs["input_ids"].shape[1]
         for batch_index, item in enumerate(batch):
-            new_tokens = outputs[batch_index][int(prompt_lengths[batch_index]):]
+            new_tokens = outputs[batch_index][input_width:]
             raw_generation = tokenizer.decode(new_tokens, skip_special_tokens=True)
             parsed = parse_generation(raw_generation)
 

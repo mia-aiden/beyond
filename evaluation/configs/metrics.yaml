@@ -14,6 +14,8 @@ bertscore:
   batch_size: 16
   rescale_with_baseline: false
 
+sentence_embeddings:
+  model: all-mpnet-base-v2
+
 dtw:
-  sentence_model: all-mpnet-base-v2
   normalize: true
