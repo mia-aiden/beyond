@@ -6,17 +6,19 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from paths import PROJECT_ROOT, EXPERIMENTS_DIR, VLLM_PYTHON
 
-PROJECT_ROOT = Path("/root/autodl-tmp/beyond")
-EXPERIMENT_DIR = Path("/root/autodl-fs/sft_experiments/format_semantics_multiseed")
+
+EXPERIMENT_DIR = EXPERIMENTS_DIR / "format_semantics_multiseed"
 TRAIN_SCRIPT = PROJECT_ROOT / "training" / "run_format_semantics_queue.py"
 EVAL_SUPERVISOR_SCRIPT = PROJECT_ROOT / "training" / "supervise_format_semantics_eval_queue.py"
-PYTHON = "/root/miniconda3/bin/python"
-EVAL_PYTHON = "/root/autodl-tmp/vllm-cu128/bin/python"
+PYTHON = sys.executable
+EVAL_PYTHON = VLLM_PYTHON
 TRAIN_PID_PATH = EXPERIMENT_DIR / "queue.pid"
 EVAL_SUPERVISOR_PID_PATH = EXPERIMENT_DIR / "eval_supervisor.pid"
 PIPELINE_PID_PATH = EXPERIMENT_DIR / "pipeline_supervisor.pid"

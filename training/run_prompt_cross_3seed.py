@@ -16,22 +16,30 @@ from pathlib import Path
 
 import pandas as pd
 
+from paths import (
+    PROJECT_ROOT,
+    EXPERIMENTS_DIR,
+    STAGE1_TEST,
+    MANUAL_TEST,
+    BASE_MODEL,
+    VLLM_PYTHON,
+    VLLM_BIN,
+)
 
-PROJECT_ROOT = Path("/root/autodl-tmp/beyond")
-ROOT = Path("/root/autodl-fs/sft_experiments")
+
+ROOT = EXPERIMENTS_DIR
 EXPERIMENT_DIR = ROOT / "prompt_cross_3seed"
 OUTPUT_DIR = EXPERIMENT_DIR / "evaluation"
 LOG_DIR = EXPERIMENT_DIR / "logs"
 STATE_PATH = EXPERIMENT_DIR / "state.json"
-BASE_MODEL = "/root/autodl-tmp/Meta-Llama-3-8B-Instruct"
-PYTHON = "/root/autodl-tmp/vllm-cu128/bin/python"
-VLLM = "/root/autodl-tmp/vllm-cu128/bin/vllm"
+PYTHON = VLLM_PYTHON
+VLLM = VLLM_BIN
 INFERENCE_SCRIPT = PROJECT_ROOT / "training" / "infer_sft_task_vllm.py"
 EVAL_SCRIPT = PROJECT_ROOT / "evaluation" / "src" / "run_eval.py"
 RUN_DEFAULTS = PROJECT_ROOT / "training" / "configs" / "run_narrative_eval.yaml"
 DATASETS = {
-    "stage1": Path("/root/autodl-fs/train_set_stage1_test_eval.csv"),
-    "manual": Path("/root/autodl-fs/manual_test_ekman_eval.csv"),
+    "stage1": STAGE1_TEST,
+    "manual": MANUAL_TEST,
 }
 MODELS = {
     "model_b": {

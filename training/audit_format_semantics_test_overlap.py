@@ -9,12 +9,14 @@ from pathlib import Path
 
 import pandas as pd
 
+from paths import EXPERIMENTS_DIR, STAGE1_TEST, MANUAL_TEST
 
-DATA_DIR = Path("/root/autodl-fs/sft_experiments/data")
-EXPERIMENT_DIR = Path("/root/autodl-fs/sft_experiments/format_semantics_multiseed")
+
+DATA_DIR = EXPERIMENTS_DIR / "data"
+EXPERIMENT_DIR = EXPERIMENTS_DIR / "format_semantics_multiseed"
 TESTS = {
-    "stage1": Path("/root/autodl-fs/train_set_stage1_test_eval.csv"),
-    "manual": Path("/root/autodl-fs/manual_test_ekman_eval.csv"),
+    "stage1": STAGE1_TEST,
+    "manual": MANUAL_TEST,
 }
 
 

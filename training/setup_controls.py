@@ -2,9 +2,11 @@ import json
 import random
 from pathlib import Path
 
-DATA = Path("/root/autodl-fs/sft_experiments/data")
-CFG = Path("/root/autodl-fs/sft_experiments/configs")
-MODEL = "/root/autodl-tmp/Meta-Llama-3-8B-Instruct"
+from paths import EXPERIMENTS_DIR, BASE_MODEL
+
+DATA = EXPERIMENTS_DIR / "data"
+CFG = EXPERIMENTS_DIR / "configs"
+MODEL = BASE_MODEL
 
 SEQ_SYSTEM = (
     "You are an expert political analyst. First classify the author's dominant "
@@ -113,7 +115,7 @@ ddp_timeout: 180000000
 """
 
 
-M = "/root/autodl-fs/sft_experiments/models"
+M = str(EXPERIMENTS_DIR / "models")
 plans = [
     ("seqjoint_shuffle_s42.yaml", "political_seqjoint_shuffle_train", "political_seqjoint_shuffle_validation", f"{M}/seqjoint_shuffle_lora_r8", 42),
     ("seqjoint_s1.yaml", "political_seqjoint_train", "political_seqjoint_validation", f"{M}/seqjoint_lora_r8_s1", 1),

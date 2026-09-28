@@ -6,8 +6,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from paths import EXPERIMENTS_DIR
 
-EXPERIMENT_DIR = Path("/root/autodl-fs/sft_experiments/format_semantics_multiseed")
+
+EXPERIMENT_DIR = EXPERIMENTS_DIR / "format_semantics_multiseed"
 STATE_PATH = EXPERIMENT_DIR / "queue_state.json"
 
 

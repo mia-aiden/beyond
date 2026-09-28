@@ -14,17 +14,25 @@ from pathlib import Path
 
 import pandas as pd
 
+from paths import (
+    PROJECT_ROOT,
+    EXPERIMENTS_DIR,
+    STAGE1_TEST,
+    MANUAL_TEST,
+    BASE_MODEL,
+    VLLM_PYTHON,
+    VLLM_BIN,
+)
 
-PROJECT_ROOT = Path("/root/autodl-tmp/beyond")
-EXPERIMENT_ROOT = Path("/root/autodl-fs/sft_experiments")
+
+EXPERIMENT_ROOT = EXPERIMENTS_DIR
 RUN_ROOT = EXPERIMENT_ROOT / "mentor_followup"
 OUTPUT_ROOT = RUN_ROOT / "evaluation"
 LOG_PATH = RUN_ROOT / "logs" / "evaluation_pipeline.log"
 STATE_PATH = RUN_ROOT / "evaluation_state.json"
 SUMMARY_PATH = RUN_ROOT / "evaluation_summary.csv"
-BASE_MODEL = "/root/autodl-tmp/Meta-Llama-3-8B-Instruct"
-PYTHON = "/root/miniconda3/envs/vllm-eval/bin/python"
-VLLM = "/root/miniconda3/envs/vllm-eval/bin/vllm"
+PYTHON = VLLM_PYTHON
+VLLM = VLLM_BIN
 INFERENCE_SCRIPT = PROJECT_ROOT / "training" / "infer_sft_task_vllm.py"
 EVAL_SCRIPT = PROJECT_ROOT / "evaluation" / "src" / "run_eval.py"
 RUN_DEFAULTS = {
@@ -32,8 +40,8 @@ RUN_DEFAULTS = {
     "narrative": PROJECT_ROOT / "training" / "configs" / "run_narrative_eval.yaml",
 }
 DATASETS = {
-    "stage1": Path("/root/autodl-fs/train_set_stage1_test_eval.csv"),
-    "manual": Path("/root/autodl-fs/manual_test_ekman_eval.csv"),
+    "stage1": STAGE1_TEST,
+    "manual": MANUAL_TEST,
 }
 MODELS = {
     "lambda_0_seed42": {

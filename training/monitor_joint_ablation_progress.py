@@ -9,8 +9,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from paths import EXPERIMENTS_DIR
 
-DEFAULT_ROOT = Path("/root/autodl-fs/sft_experiments/ablations")
+
+DEFAULT_ROOT = EXPERIMENTS_DIR / "ablations"
 EXPERIMENTS = (
     ("lambda_0_3", "joint_l03_train", "joint_l03_finish", 0),
     ("lambda_0_5", "joint_l05_train", "joint_l05_finish", 1),

@@ -16,25 +16,33 @@ from pathlib import Path
 
 import pandas as pd
 
+from paths import (
+    PROJECT_ROOT,
+    EXPERIMENTS_DIR,
+    STAGE1_TEST,
+    MANUAL_TEST,
+    BASE_MODEL,
+    VLLM_PYTHON,
+    VLLM_BIN,
+)
 
-PROJECT_ROOT = Path("/root/autodl-tmp/beyond")
-EXPERIMENT_DIR = Path("/root/autodl-fs/sft_experiments/format_semantics_multiseed")
+
+EXPERIMENT_DIR = EXPERIMENTS_DIR / "format_semantics_multiseed"
 MANIFEST_PATH = EXPERIMENT_DIR / "manifest.json"
 TRAIN_STATE_PATH = EXPERIMENT_DIR / "queue_state.json"
 STATE_PATH = EXPERIMENT_DIR / "eval_queue_state.json"
 LOCK_PATH = EXPERIMENT_DIR / "eval_queue.pid"
 LOG_DIR = EXPERIMENT_DIR / "eval_logs"
 OUTPUT_DIR = EXPERIMENT_DIR / "evaluation"
-BASE_MODEL = "/root/autodl-tmp/Meta-Llama-3-8B-Instruct"
-PYTHON = "/root/autodl-tmp/vllm-cu128/bin/python"
-VLLM = "/root/autodl-tmp/vllm-cu128/bin/vllm"
+PYTHON = VLLM_PYTHON
+VLLM = VLLM_BIN
 INFERENCE_SCRIPT = PROJECT_ROOT / "training" / "infer_sft_task_vllm.py"
 EVAL_SCRIPT = PROJECT_ROOT / "evaluation" / "src" / "run_eval.py"
 RUN_DEFAULTS = PROJECT_ROOT / "training" / "configs" / "run_narrative_eval.yaml"
 SUMMARY_SCRIPT = PROJECT_ROOT / "training" / "summarize_format_semantics_multiseed.py"
 DATASETS = {
-    "stage1": Path("/root/autodl-fs/train_set_stage1_test_eval.csv"),
-    "manual": Path("/root/autodl-fs/manual_test_ekman_eval.csv"),
+    "stage1": STAGE1_TEST,
+    "manual": MANUAL_TEST,
 }
 GPU_PORTS = {0: 8100, 1: 8101}
 

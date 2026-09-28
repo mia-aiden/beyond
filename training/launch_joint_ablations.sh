@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
 
-PROJECT_ROOT="/root/autodl-tmp/beyond"
-FS_ROOT="/root/autodl-fs/sft_experiments"
+FS_ROOT="$EXPERIMENTS_DIR"
 ABLATION_ROOT="${FS_ROOT}/ablations"
 
 names=(lambda_0_3 lambda_0_5 lambda_0_8)
@@ -35,10 +35,10 @@ for index in 0 1 2; do
   finish_screen="joint_${short}_finish"
 
   screen -dmS "${train_screen}" bash -lc \
-    "source /root/miniconda3/etc/profile.d/conda.sh && conda activate llamafactory && export CUDA_VISIBLE_DEVICES=${gpu} OMP_NUM_THREADS=8 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONUNBUFFERED=1 && python ${PROJECT_ROOT}/training/train_joint_multitask.py --config ${config} >> ${root}/logs/train.log 2>&1"
+    "source ${CONDA_SH} && conda activate llamafactory && export CUDA_VISIBLE_DEVICES=${gpu} OMP_NUM_THREADS=8 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONUNBUFFERED=1 && python ${PROJECT_ROOT}/training/train_joint_multitask.py --config ${config} >> ${root}/logs/train.log 2>&1"
 
   screen -dmS "${finish_screen}" bash -lc \
-    "source /root/miniconda3/etc/profile.d/conda.sh && conda activate llamafactory && ${PROJECT_ROOT}/training/finish_joint_ablation.sh ${name} ${gpu} ${config} ${model_dir} ${train_screen} ${root}"
+    "source ${CONDA_SH} && conda activate llamafactory && ${PROJECT_ROOT}/training/finish_joint_ablation.sh ${name} ${gpu} ${config} ${model_dir} ${train_screen} ${root}"
 done
 
 screen -dmS joint_lambda_suite bash -lc \

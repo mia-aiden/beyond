@@ -7,6 +7,8 @@ from pathlib import Path
 import numpy as np
 from transformers import AutoTokenizer
 
+from paths import EXPERIMENTS_DIR, BASE_MODEL
+
 
 def read_jsonl(path: Path) -> list[dict[str, str]]:
     with path.open("r", encoding="utf-8") as infile:
@@ -57,12 +59,12 @@ def main() -> None:
     parser.add_argument(
         "--model",
         type=Path,
-        default=Path("/root/autodl-tmp/Meta-Llama-3-8B-Instruct"),
+        default=Path(BASE_MODEL),
     )
     parser.add_argument(
         "--data-dir",
         type=Path,
-        default=Path("/root/autodl-fs/sft_experiments/data"),
+        default=EXPERIMENTS_DIR / "data",
     )
     args = parser.parse_args()
 

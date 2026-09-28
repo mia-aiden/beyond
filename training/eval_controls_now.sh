@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 set -uo pipefail
-CE=/root/autodl-fs/sft_experiments/controls_eval
-M=/root/autodl-fs/sft_experiments/models
-GOLD_S1=/root/autodl-fs/train_set_stage1_test_eval.csv
-GOLD_MAN=/root/autodl-fs/manual_test_ekman_eval.csv
-MB_S1=/root/autodl-fs/sft_experiments/evaluation_direct/narrative/stage1_sft/evaluation/run_20260727_164624
-MB_MAN=/root/autodl-fs/sft_experiments/evaluation_direct/narrative/manual_sft/evaluation/run_20260727_164858
-PR=/root/autodl-tmp/beyond
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
+CE=$EXPERIMENTS_DIR/controls_eval
+M=$EXPERIMENTS_DIR/models
+GOLD_S1=$STAGE1_TEST
+GOLD_MAN=$MANUAL_TEST
+MB_S1=$EXPERIMENTS_DIR/evaluation_direct/narrative/stage1_sft/evaluation/run_20260727_164624
+MB_MAN=$EXPERIMENTS_DIR/evaluation_direct/narrative/manual_sft/evaluation/run_20260727_164858
+PR=$PROJECT_ROOT
 TAGS="shuffle seqjoint_s1"
-source /root/miniconda3/etc/profile.d/conda.sh
+source "$CONDA_SH"
 
 adapter_dir () {
   case "$1" in

@@ -11,12 +11,14 @@ import numpy as np
 import pandas as pd
 import matplotlib
 
+from paths import EXPERIMENTS_DIR
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy import stats
 
 
-EXPERIMENT_DIR = Path("/root/autodl-fs/sft_experiments/format_semantics_multiseed")
+EXPERIMENT_DIR = EXPERIMENTS_DIR / "format_semantics_multiseed"
 EVALUATION_DIR = EXPERIMENT_DIR / "evaluation"
 RESULTS_DIR = EXPERIMENT_DIR / "results"
 PLOTS_DIR = RESULTS_DIR / "plots"

@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -uo pipefail
-CE=/root/autodl-fs/sft_experiments/conditioned_eval
-GOLD_S1=/root/autodl-fs/train_set_stage1_test_eval.csv
-GOLD_MAN=/root/autodl-fs/manual_test_ekman_eval.csv
-MB_S1=/root/autodl-fs/sft_experiments/evaluation_direct/narrative/stage1_sft/evaluation/run_20260727_164624
-MB_MAN=/root/autodl-fs/sft_experiments/evaluation_direct/narrative/manual_sft/evaluation/run_20260727_164858
-PR=/root/autodl-tmp/beyond
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
+CE=$EXPERIMENTS_DIR/conditioned_eval
+GOLD_S1=$STAGE1_TEST
+GOLD_MAN=$MANUAL_TEST
+MB_S1=$EXPERIMENTS_DIR/evaluation_direct/narrative/stage1_sft/evaluation/run_20260727_164624
+MB_MAN=$EXPERIMENTS_DIR/evaluation_direct/narrative/manual_sft/evaluation/run_20260727_164858
+PR=$PROJECT_ROOT
 
 echo "[finish] waiting for prediction files..."
 for f in bgold/stage1 bgold/manual seqjoint/stage1 seqjoint/manual; do
@@ -14,7 +15,7 @@ done
 while screen -ls | grep -qE 'inf_bgold|inf_seqjoint'; do sleep 20; done
 echo "[finish] predictions ready; computing metrics..."
 
-source /root/miniconda3/etc/profile.d/conda.sh
+source "$CONDA_SH"
 conda activate vllm-eval
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=8
 

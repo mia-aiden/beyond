@@ -11,6 +11,8 @@ import torch
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
+from paths import BASE_MODEL
+
 
 CURRENT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = CURRENT_DIR.parent
@@ -228,7 +230,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--base-model",
         type=Path,
-        default=Path("/root/autodl-tmp/Meta-Llama-3-8B-Instruct"),
+        default=Path(BASE_MODEL),
     )
     parser.add_argument("--adapter", type=Path, required=True)
     parser.add_argument("--batch-size", type=int, default=2)

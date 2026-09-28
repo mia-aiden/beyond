@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
 
-ROOT="/root/autodl-tmp/beyond"
-FS_ROOT="/root/autodl-fs/sft_experiments"
-STAGE1_GOLD="/root/autodl-fs/train_set_stage1_test_eval.csv"
-MANUAL_GOLD="/root/autodl-fs/manual_test_ekman_eval.csv"
+ROOT="$PROJECT_ROOT"
+FS_ROOT="$EXPERIMENTS_DIR"
+STAGE1_GOLD="$STAGE1_TEST"
+MANUAL_GOLD="$MANUAL_TEST"
 BASE_URL="http://127.0.0.1:8000/v1"
 SERVER_PID=""
 
-source /root/miniconda3/etc/profile.d/conda.sh
+source "$CONDA_SH"
 export OMP_NUM_THREADS=8
 
 stop_server() {

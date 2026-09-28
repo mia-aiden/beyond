@@ -11,8 +11,10 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
+from paths import EXPERIMENTS_DIR
 
-ROOT = Path("/root/autodl-fs/sft_experiments")
+
+ROOT = EXPERIMENTS_DIR
 MODEL_B_DIR = ROOT / "model_b_multiseed" / "evaluation"
 SEQJOINT_DIR = ROOT / "format_semantics_multiseed" / "evaluation" / "true"
 RESULTS_DIR = ROOT / "model_b_multiseed" / "comparison"

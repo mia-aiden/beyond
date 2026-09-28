@@ -7,8 +7,10 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from paths import EXPERIMENTS_DIR
 
-DATA_ROOT = Path("/root/autodl-fs/sft_experiments/data")
+
+DATA_ROOT = EXPERIMENTS_DIR / "data"
 
 
 def read_jsonl(path: Path) -> list[dict[str, str]]:

@@ -5,8 +5,10 @@ from pathlib import Path
 
 import pandas as pd
 
+from paths import EXPERIMENTS_DIR
 
-FS_ROOT = Path("/root/autodl-fs/sft_experiments")
+
+FS_ROOT = EXPERIMENTS_DIR
 EVALUATION_ROOT = FS_ROOT / "evaluation"
 
 

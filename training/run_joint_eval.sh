@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
 
 TASK="${1:?Usage: run_joint_eval.sh <label|narrative> <gold.csv> <output-root> [batch-size] [adapter-path]}"
 GOLD_PATH="${2:?Missing gold CSV path.}"
 OUTPUT_ROOT="${3:?Missing output root.}"
 BATCH_SIZE="${4:-8}"
-PROJECT_ROOT="/root/autodl-tmp/beyond"
-FS_ROOT="/root/autodl-fs/sft_experiments"
+FS_ROOT="$EXPERIMENTS_DIR"
 ADAPTER_PATH="${5:-${FS_ROOT}/models/joint_lora_r8}"
 
 case "${TASK}" in
@@ -27,7 +27,7 @@ if [[ ! -f "${ADAPTER_PATH}/adapter_model.safetensors" ]]; then
   exit 1
 fi
 
-source /root/miniconda3/etc/profile.d/conda.sh
+source "$CONDA_SH"
 conda activate llamafactory
 export OMP_NUM_THREADS=8
 export HF_HUB_OFFLINE=1

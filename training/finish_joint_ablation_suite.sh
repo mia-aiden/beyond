@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
 
-PROJECT_ROOT="/root/autodl-tmp/beyond"
-FS_ROOT="/root/autodl-fs/sft_experiments"
+FS_ROOT="$EXPERIMENTS_DIR"
 ABLATION_ROOT="${FS_ROOT}/ablations"
 LOG_PATH="${ABLATION_ROOT}/lambda_comparison/suite.log"
 
@@ -28,7 +28,7 @@ for index in 0 1 2; do
   echo "${experiment} complete at $(cat "${marker}")"
 done
 
-source /root/miniconda3/etc/profile.d/conda.sh
+source "$CONDA_SH"
 conda activate vllm-eval
 python "${PROJECT_ROOT}/training/compare_joint_lambdas.py"
 

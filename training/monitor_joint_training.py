@@ -9,8 +9,10 @@ from typing import Any
 
 from finalize_joint_model import read_validation_history
 
+from paths import EXPERIMENTS_DIR
 
-DEFAULT_MODEL_DIR = Path("/root/autodl-fs/sft_experiments/models/joint_lora_r8")
+
+DEFAULT_MODEL_DIR = EXPERIMENTS_DIR / "models" / "joint_lora_r8"
 
 
 def latest_complete_checkpoint(model_dir: Path) -> Path | None:

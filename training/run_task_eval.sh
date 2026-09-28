@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
 
 TASK="${1:?Usage: run_task_eval.sh <label|narrative> <model-name> <gold.csv> <output-root>}"
 MODEL_NAME="${2:?Missing served model name.}"
 GOLD_PATH="${3:?Missing gold CSV path.}"
 OUTPUT_ROOT="${4:?Missing output root.}"
-PROJECT_ROOT="/root/autodl-tmp/beyond"
 
 case "${TASK}" in
   label)
@@ -20,7 +20,7 @@ case "${TASK}" in
     ;;
 esac
 
-source /root/miniconda3/etc/profile.d/conda.sh
+source "$CONDA_SH"
 conda activate vllm-eval
 export OMP_NUM_THREADS=8
 

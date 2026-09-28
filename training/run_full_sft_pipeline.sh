@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
 
 LABEL_TRAIN_PID="${1:?Usage: run_full_sft_pipeline.sh <running-label-train-pid>}"
-ROOT="/root/autodl-tmp/beyond"
-FS_ROOT="/root/autodl-fs/sft_experiments"
-STAGE1_GOLD="/root/autodl-fs/train_set_stage1_test_eval.csv"
-MANUAL_GOLD="/root/autodl-fs/manual_test_ekman_eval.csv"
+ROOT="$PROJECT_ROOT"
+FS_ROOT="$EXPERIMENTS_DIR"
+STAGE1_GOLD="$STAGE1_TEST"
+MANUAL_GOLD="$MANUAL_TEST"
 BASE_URL="http://127.0.0.1:8000/v1"
 
-source /root/miniconda3/etc/profile.d/conda.sh
+source "$CONDA_SH"
 export OMP_NUM_THREADS=8
 
 wait_for_process() {
@@ -97,7 +98,7 @@ evaluate_prediction label label "${MANUAL_GOLD}" manual
 echo "Starting narrative LoRA training."
 conda activate llamafactory
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-cd /root/autodl-tmp/LLaMA-Factory
+cd "$LLAMAFACTORY_DIR"
 llamafactory-cli train "${ROOT}/training/configs/narrative_sft.yaml" \
   >"${FS_ROOT}/logs/narrative_sft.log" 2>&1
 conda deactivate

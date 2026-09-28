@@ -9,9 +9,11 @@ from typing import Any
 
 from transformers import AutoTokenizer
 
+from paths import EXPERIMENTS_DIR, BASE_MODEL
 
-DEFAULT_MODEL_DIR = Path("/root/autodl-fs/sft_experiments/models/joint_lora_r8")
-DEFAULT_BASE_MODEL = Path("/root/autodl-tmp/Meta-Llama-3-8B-Instruct")
+
+DEFAULT_MODEL_DIR = EXPERIMENTS_DIR / "models" / "joint_lora_r8"
+DEFAULT_BASE_MODEL = Path(BASE_MODEL)
 FINAL_ADAPTER_FILES = (
     "adapter_config.json",
     "adapter_model.safetensors",

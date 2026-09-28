@@ -8,6 +8,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from paths import EXPERIMENTS_DIR, TRAIN_POOL
+
 
 EKMAN_LABELS = (
     "Anger",
@@ -232,12 +234,12 @@ def parse_args() -> argparse.Namespace:
         "--input",
         dest="input_path",
         type=Path,
-        default=Path("/root/autodl-fs/train_set_stage1_train_no_test_overlap.csv"),
+        default=TRAIN_POOL,
     )
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("/root/autodl-fs/sft_experiments/data"),
+        default=EXPERIMENTS_DIR / "data",
     )
     parser.add_argument("--validation-fraction", type=float, default=0.05)
     parser.add_argument("--seed", type=int, default=42)

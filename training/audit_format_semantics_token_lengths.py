@@ -9,10 +9,12 @@ from pathlib import Path
 import numpy as np
 from transformers import AutoTokenizer
 
+from paths import EXPERIMENTS_DIR, BASE_MODEL
 
-DATA_DIR = Path("/root/autodl-fs/sft_experiments/data")
-EXPERIMENT_DIR = Path("/root/autodl-fs/sft_experiments/format_semantics_multiseed")
-MODEL = Path("/root/autodl-tmp/Meta-Llama-3-8B-Instruct")
+
+DATA_DIR = EXPERIMENTS_DIR / "data"
+EXPERIMENT_DIR = EXPERIMENTS_DIR / "format_semantics_multiseed"
+MODEL = Path(BASE_MODEL)
 CONDITIONS = ("true", "forced_wrong", "constant_neutral", "marker_control")
 CUTOFF = 1536
 

@@ -7,9 +7,11 @@ from typing import Any
 
 import yaml
 
+from paths import PROJECT_ROOT, EXPERIMENTS_DIR
 
-DEFAULT_ROOT = Path("/root/autodl-fs/sft_experiments")
-DEFAULT_CONFIG = Path("/root/autodl-tmp/beyond/training/configs/joint_sft.yaml")
+
+DEFAULT_ROOT = EXPERIMENTS_DIR
+DEFAULT_CONFIG = PROJECT_ROOT / "training" / "configs" / "joint_sft.yaml"
 
 
 def load_json(path: Path) -> dict[str, Any]:

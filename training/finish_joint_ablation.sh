@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
 
 EXPERIMENT_NAME="${1:?Usage: finish_joint_ablation.sh <name> <gpu> <config> <model-dir> <train-screen> <experiment-root>}"
 GPU_INDEX="${2:?Missing GPU index.}"
@@ -8,7 +9,6 @@ MODEL_DIR="${4:?Missing model directory.}"
 TRAIN_SCREEN="${5:?Missing training screen name.}"
 EXPERIMENT_ROOT="${6:?Missing experiment root.}"
 
-PROJECT_ROOT="/root/autodl-tmp/beyond"
 LOG_PATH="${EXPERIMENT_ROOT}/logs/finish_pipeline.log"
 DECISION_PATH="${MODEL_DIR}/joint_early_stopping_decision.json"
 
@@ -20,7 +20,7 @@ export OMP_NUM_THREADS=8
 export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 
-source /root/miniconda3/etc/profile.d/conda.sh
+source "$CONDA_SH"
 conda activate llamafactory
 
 echo "${EXPERIMENT_NAME} finish pipeline started at $(date --iso-8601=seconds)"
@@ -43,28 +43,28 @@ python "${PROJECT_ROOT}/training/evaluate_joint_checkpoint.py" \
 
 "${PROJECT_ROOT}/training/run_joint_eval.sh" \
   label \
-  /root/autodl-fs/train_set_stage1_test_eval.csv \
+  $STAGE1_TEST \
   "${EXPERIMENT_ROOT}/evaluation/label/stage1" \
   8 \
   "${MODEL_DIR}"
 
 "${PROJECT_ROOT}/training/run_joint_eval.sh" \
   label \
-  /root/autodl-fs/manual_test_ekman_eval.csv \
+  $MANUAL_TEST \
   "${EXPERIMENT_ROOT}/evaluation/label/manual" \
   8 \
   "${MODEL_DIR}"
 
 "${PROJECT_ROOT}/training/run_joint_eval.sh" \
   narrative \
-  /root/autodl-fs/train_set_stage1_test_eval.csv \
+  $STAGE1_TEST \
   "${EXPERIMENT_ROOT}/evaluation/narrative/stage1" \
   8 \
   "${MODEL_DIR}"
 
 "${PROJECT_ROOT}/training/run_joint_eval.sh" \
   narrative \
-  /root/autodl-fs/manual_test_ekman_eval.csv \
+  $MANUAL_TEST \
   "${EXPERIMENT_ROOT}/evaluation/narrative/manual" \
   8 \
   "${MODEL_DIR}"

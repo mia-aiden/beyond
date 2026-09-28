@@ -10,12 +10,13 @@ import random
 from collections import Counter
 from pathlib import Path
 
+from paths import EXPERIMENTS_DIR, BASE_MODEL
 
-DATA_DIR = Path("/root/autodl-fs/sft_experiments/data")
-EXPERIMENT_DIR = Path("/root/autodl-fs/sft_experiments/format_semantics_multiseed")
+
+DATA_DIR = EXPERIMENTS_DIR / "data"
+EXPERIMENT_DIR = EXPERIMENTS_DIR / "format_semantics_multiseed"
 CONFIG_DIR = EXPERIMENT_DIR / "configs"
 MODEL_DIR = EXPERIMENT_DIR / "models"
-BASE_MODEL = "/root/autodl-tmp/Meta-Llama-3-8B-Instruct"
 SEEDS = (42, 1, 2, 3, 4)
 
 SEQ_SYSTEM = (
@@ -39,10 +40,10 @@ MARKER_INSTRUCTION = "Output the fixed marker X, then extract the political narr
 
 CONDITIONS = ("true", "forced_wrong", "constant_neutral", "marker_control")
 LEGACY_TRUE_MODELS = {
-    42: Path("/root/autodl-fs/sft_experiments/models/seqjoint_lora_r8"),
-    1: Path("/root/autodl-fs/sft_experiments/models/seqjoint_lora_r8_s1"),
-    2: Path("/root/autodl-fs/sft_experiments/models/seqjoint_lora_r8_s2"),
-    3: Path("/root/autodl-fs/sft_experiments/models/seqjoint_lora_r8_s3"),
+    42: EXPERIMENTS_DIR / "models" / "seqjoint_lora_r8",
+    1: EXPERIMENTS_DIR / "models" / "seqjoint_lora_r8_s1",
+    2: EXPERIMENTS_DIR / "models" / "seqjoint_lora_r8_s2",
+    3: EXPERIMENTS_DIR / "models" / "seqjoint_lora_r8_s3",
 }
 
 

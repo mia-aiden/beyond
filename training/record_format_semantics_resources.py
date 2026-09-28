@@ -9,8 +9,10 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from paths import EXPERIMENTS_DIR
 
-EXPERIMENT_DIR = Path("/root/autodl-fs/sft_experiments/format_semantics_multiseed")
+
+EXPERIMENT_DIR = EXPERIMENTS_DIR / "format_semantics_multiseed"
 TRAIN_STATE = EXPERIMENT_DIR / "queue_state.json"
 EVAL_STATE = EXPERIMENT_DIR / "eval_queue_state.json"
 OUTPUT = EXPERIMENT_DIR / "resource_history.jsonl"

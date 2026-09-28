@@ -12,6 +12,8 @@ import torch
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
+from paths import BASE_MODEL
+
 CURRENT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = CURRENT_DIR.parent
 EVAL_SRC = PROJECT_ROOT / "evaluation" / "src"
@@ -96,7 +98,7 @@ def main():
     parser.add_argument("--gold", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--adapter", type=Path, required=True)
-    parser.add_argument("--base-model", type=Path, default=Path("/root/autodl-tmp/Meta-Llama-3-8B-Instruct"))
+    parser.add_argument("--base-model", type=Path, default=Path(BASE_MODEL))
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--max-source-tokens", type=int, default=1300)
     parser.add_argument("--max-new-tokens", type=int, default=None)

@@ -15,12 +15,14 @@ from sentence_transformers import SentenceTransformer
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 
+from paths import EXPERIMENTS_DIR, STAGE1_TEST, MANUAL_TEST, TRAIN_POOL
+
 
 MODEL_NAME = "all-mpnet-base-v2"
-AUTO_TRAIN_PATH = Path("/root/autodl-fs/train_set_stage1_train_no_test_overlap.csv")
-AUTO_TEST_PATH = Path("/root/autodl-fs/train_set_stage1_test_eval.csv")
-MANUAL_PATH = Path("/root/autodl-fs/manual_test_ekman_eval.csv")
-OUTPUT_DIR = Path("/root/autodl-fs/sft_experiments/synthetic_validation_mpnet")
+AUTO_TRAIN_PATH = TRAIN_POOL
+AUTO_TEST_PATH = STAGE1_TEST
+MANUAL_PATH = MANUAL_TEST
+OUTPUT_DIR = EXPERIMENTS_DIR / "synthetic_validation_mpnet"
 
 BATCH_SIZE = 128
 SEED = 42

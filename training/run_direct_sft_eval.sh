@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
 
 TASK="${1:?Usage: run_direct_sft_eval.sh <label|narrative> <gold.csv> <output-root> [batch-size]}"
 GOLD_PATH="${2:?Missing gold CSV path.}"
 OUTPUT_ROOT="${3:?Missing output root.}"
 BATCH_SIZE="${4:-2}"
-PROJECT_ROOT="/root/autodl-tmp/beyond"
-FS_ROOT="/root/autodl-fs/sft_experiments"
+FS_ROOT="$EXPERIMENTS_DIR"
 
 case "${TASK}" in
   label)
@@ -23,7 +23,7 @@ case "${TASK}" in
     ;;
 esac
 
-source /root/miniconda3/etc/profile.d/conda.sh
+source "$CONDA_SH"
 conda activate llamafactory
 export OMP_NUM_THREADS=8
 export HF_HUB_OFFLINE=1

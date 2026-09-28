@@ -6,8 +6,10 @@ import json
 from pathlib import Path
 from typing import Any
 
+from paths import EXPERIMENTS_DIR
 
-DEFAULT_ROOT = Path("/root/autodl-fs/sft_experiments")
+
+DEFAULT_ROOT = EXPERIMENTS_DIR
 DATASETS = ("stage1", "manual")
 TASK_METRICS = {
     "label": ("accuracy", "macro_f1"),

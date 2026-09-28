@@ -9,14 +9,20 @@ import platform
 import subprocess
 from pathlib import Path
 
+from paths import (
+    PROJECT_ROOT,
+    EXPERIMENTS_DIR,
+    BASE_MODEL,
+    LLAMAFACTORY_DIR,
+    LLAMAFACTORY_PYTHON,
+    VLLM_PYTHON,
+)
 
-EXPERIMENT_DIR = Path("/root/autodl-fs/sft_experiments/format_semantics_multiseed")
-PROJECT_ROOT = Path("/root/autodl-tmp/beyond")
-LLAMAFACTORY_ROOT = Path("/root/autodl-tmp/LLaMA-Factory")
-BASE_MODEL = Path("/root/autodl-tmp/Meta-Llama-3-8B-Instruct")
+
+EXPERIMENT_DIR = EXPERIMENTS_DIR / "format_semantics_multiseed"
 ENV_PYTHONS = {
-    "llamafactory": Path("/root/miniconda3/envs/llamafactory/bin/python"),
-    "vllm_eval": Path("/root/miniconda3/envs/vllm-eval/bin/python"),
+    "llamafactory": Path(LLAMAFACTORY_PYTHON),
+    "vllm_eval": Path(VLLM_PYTHON),
 }
 PACKAGES = (
     "torch",
@@ -77,14 +83,14 @@ def main() -> None:
             "--format=csv,noheader,nounits",
         ]
     )
-    config_path = BASE_MODEL / "config.json"
+    config_path = Path(BASE_MODEL) / "config.json"
     payload = {
         "platform": platform.platform(),
         "gpu_rows": gpu_csv.splitlines(),
         "nvidia_smi": run(["nvidia-smi"]),
         "repositories": {
             "project": git_state(PROJECT_ROOT),
-            "llama_factory": git_state(LLAMAFACTORY_ROOT),
+            "llama_factory": git_state(LLAMAFACTORY_DIR),
         },
         "environments": {
             name: {

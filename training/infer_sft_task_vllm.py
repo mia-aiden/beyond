@@ -12,6 +12,8 @@ import pandas as pd
 from openai import OpenAI
 from transformers import AutoTokenizer
 
+from paths import BASE_MODEL
+
 
 CURRENT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = CURRENT_DIR.parent
@@ -199,7 +201,7 @@ def main() -> None:
     parser.add_argument(
         "--tokenizer-path",
         type=Path,
-        default=Path("/root/autodl-tmp/Meta-Llama-3-8B-Instruct"),
+        default=Path(BASE_MODEL),
     )
     parser.add_argument("--max-source-tokens", type=int, default=1300)
     parser.add_argument("--concurrency", type=int, default=8)

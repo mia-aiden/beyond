@@ -10,6 +10,8 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 
+from paths import EXPERIMENTS_DIR, BASE_MODEL
+
 CUR = Path(__file__).resolve().parent
 sys.path.insert(0, str(CUR))
 sys.path.insert(0, str(CUR.parent / "evaluation" / "src"))
@@ -23,8 +25,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--variant", choices=["emotion", "shared"], required=True)
     ap.add_argument("--soft", required=True, help="path to soft_prompt.pt")
-    ap.add_argument("--adapter", default="/root/autodl-fs/sft_experiments/models/narrative_lora_r8")
-    ap.add_argument("--base-model", default="/root/autodl-tmp/Meta-Llama-3-8B-Instruct")
+    ap.add_argument("--adapter", default=str(EXPERIMENTS_DIR / "models" / "narrative_lora_r8"))
+    ap.add_argument("--base-model", default=BASE_MODEL)
     ap.add_argument("--gold", type=Path, required=True)
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--max-new-tokens", type=int, default=256)

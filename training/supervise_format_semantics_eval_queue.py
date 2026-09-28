@@ -10,11 +10,12 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from paths import PROJECT_ROOT, EXPERIMENTS_DIR, VLLM_PYTHON
 
-PROJECT_ROOT = Path("/root/autodl-tmp/beyond")
-EXPERIMENT_DIR = Path("/root/autodl-fs/sft_experiments/format_semantics_multiseed")
+
+EXPERIMENT_DIR = EXPERIMENTS_DIR / "format_semantics_multiseed"
 EVAL_SCRIPT = PROJECT_ROOT / "training" / "run_format_semantics_eval_queue.py"
-PYTHON = "/root/autodl-tmp/vllm-cu128/bin/python"
+PYTHON = VLLM_PYTHON
 EVAL_PID_PATH = EXPERIMENT_DIR / "eval_queue.pid"
 STATE_PATH = EXPERIMENT_DIR / "eval_queue_state.json"
 SUPERVISOR_PID_PATH = EXPERIMENT_DIR / "eval_supervisor.pid"

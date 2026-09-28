@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 set -uo pipefail
-CE=/root/autodl-fs/sft_experiments/cgold_bgold_eval
-GOLD_S1=/root/autodl-fs/train_set_stage1_test_eval.csv
-GOLD_MAN=/root/autodl-fs/manual_test_ekman_eval.csv
-PR=/root/autodl-tmp/beyond
-FS=/root/autodl-fs/sft_experiments
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
+CE=$EXPERIMENTS_DIR/cgold_bgold_eval
+GOLD_S1=$STAGE1_TEST
+GOLD_MAN=$MANUAL_TEST
+PR=$PROJECT_ROOT
+FS=$EXPERIMENTS_DIR
 B_ADP=$FS/models/narrative_lora_r8
 C_ADP=$FS/models/joint_lora_r8          # Model C, lambda=1.0
-source /root/miniconda3/etc/profile.d/conda.sh
+source "$CONDA_SH"
 
 echo "[cgbg] inference (sequential, single GPU)..."
 conda activate llamafactory

@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
 
 TASK="${1:?Usage: serve_sft_adapter.sh <label|narrative>}"
-BASE_MODEL="/root/autodl-tmp/Meta-Llama-3-8B-Instruct"
 
 case "${TASK}" in
   label)
-    ADAPTER="/root/autodl-fs/sft_experiments/models/label_lora_r8"
+    ADAPTER="$EXPERIMENTS_DIR/models/label_lora_r8"
     ;;
   narrative)
-    ADAPTER="/root/autodl-fs/sft_experiments/models/narrative_lora_r8"
+    ADAPTER="$EXPERIMENTS_DIR/models/narrative_lora_r8"
     ;;
   *)
     echo "Task must be label or narrative." >&2
@@ -17,7 +17,7 @@ case "${TASK}" in
     ;;
 esac
 
-source /root/miniconda3/etc/profile.d/conda.sh
+source "$CONDA_SH"
 conda activate vllm-eval
 export OMP_NUM_THREADS=8
 export VLLM_USE_FLASHINFER_SAMPLER=0

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
 
-PROJECT_ROOT="/root/autodl-tmp/beyond"
-EXPERIMENT_ROOT="/root/autodl-fs/sft_experiments/mentor_followup"
+EXPERIMENT_ROOT="$EXPERIMENTS_DIR/mentor_followup"
 LOG_ROOT="${EXPERIMENT_ROOT}/logs"
 MODEL_ROOT="${EXPERIMENT_ROOT}/models"
-LLAMAFACTORY_ROOT="/root/autodl-tmp/LLaMA-Factory"
+LLAMAFACTORY_ROOT="$LLAMAFACTORY_DIR"
 
 joint_jobs=(
   "joint_lambda_0_0_seed42:0:joint_lambda_00_seed42.yaml"
@@ -33,11 +33,11 @@ mkdir -p "${LOG_ROOT}" "${MODEL_ROOT}"
 for job_spec in "${joint_jobs[@]}"; do
   IFS=: read -r job_name gpu config_name <<< "${job_spec}"
   screen -dmS "${job_name}" bash -lc \
-    "source /root/miniconda3/etc/profile.d/conda.sh && conda activate llamafactory && export CUDA_VISIBLE_DEVICES=${gpu} OMP_NUM_THREADS=8 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONUNBUFFERED=1 && python ${PROJECT_ROOT}/training/train_joint_multitask.py --config ${PROJECT_ROOT}/training/configs/${config_name} >> ${LOG_ROOT}/${job_name}.log 2>&1"
+    "source ${CONDA_SH} && conda activate llamafactory && export CUDA_VISIBLE_DEVICES=${gpu} OMP_NUM_THREADS=8 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONUNBUFFERED=1 && python ${PROJECT_ROOT}/training/train_joint_multitask.py --config ${PROJECT_ROOT}/training/configs/${config_name} >> ${LOG_ROOT}/${job_name}.log 2>&1"
 done
 
 screen -dmS model_a_seed_queue bash -lc \
-  "source /root/miniconda3/etc/profile.d/conda.sh && conda activate llamafactory && cd ${LLAMAFACTORY_ROOT} && export CUDA_VISIBLE_DEVICES=3 OMP_NUM_THREADS=8 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONUNBUFFERED=1 && echo '[model_a_seed1] START' \$(date) >> ${LOG_ROOT}/model_a_seed_queue.log && llamafactory-cli train ${PROJECT_ROOT}/training/configs/label_sft_seed1.yaml >> ${LOG_ROOT}/model_a_seed_queue.log 2>&1 && echo '[model_a_seed1] DONE' \$(date) >> ${LOG_ROOT}/model_a_seed_queue.log && echo '[model_a_seed2] START' \$(date) >> ${LOG_ROOT}/model_a_seed_queue.log && llamafactory-cli train ${PROJECT_ROOT}/training/configs/label_sft_seed2.yaml >> ${LOG_ROOT}/model_a_seed_queue.log 2>&1 && echo '[model_a_seed2] DONE' \$(date) >> ${LOG_ROOT}/model_a_seed_queue.log"
+  "source ${CONDA_SH} && conda activate llamafactory && cd ${LLAMAFACTORY_ROOT} && export CUDA_VISIBLE_DEVICES=3 OMP_NUM_THREADS=8 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONUNBUFFERED=1 && echo '[model_a_seed1] START' \$(date) >> ${LOG_ROOT}/model_a_seed_queue.log && llamafactory-cli train ${PROJECT_ROOT}/training/configs/label_sft_seed1.yaml >> ${LOG_ROOT}/model_a_seed_queue.log 2>&1 && echo '[model_a_seed1] DONE' \$(date) >> ${LOG_ROOT}/model_a_seed_queue.log && echo '[model_a_seed2] START' \$(date) >> ${LOG_ROOT}/model_a_seed_queue.log && llamafactory-cli train ${PROJECT_ROOT}/training/configs/label_sft_seed2.yaml >> ${LOG_ROOT}/model_a_seed_queue.log 2>&1 && echo '[model_a_seed2] DONE' \$(date) >> ${LOG_ROOT}/model_a_seed_queue.log"
 
 sleep 8
 screen -list

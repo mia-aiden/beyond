@@ -12,14 +12,15 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from paths import EXPERIMENTS_DIR, LLAMAFACTORY_DIR, LLAMAFACTORY_CLI
 
-EXPERIMENT_DIR = Path("/root/autodl-fs/sft_experiments/format_semantics_multiseed")
+
+EXPERIMENT_DIR = EXPERIMENTS_DIR / "format_semantics_multiseed"
 MANIFEST_PATH = EXPERIMENT_DIR / "manifest.json"
 STATE_PATH = EXPERIMENT_DIR / "queue_state.json"
 LOCK_PATH = EXPERIMENT_DIR / "queue.pid"
 LOG_DIR = EXPERIMENT_DIR / "logs"
-LLAMAFACTORY_DIR = Path("/root/autodl-tmp/LLaMA-Factory")
-CLI = "/root/miniconda3/envs/llamafactory/bin/llamafactory-cli"
+CLI = LLAMAFACTORY_CLI
 GPUS = (0, 1)
 POLL_SECONDS = 30
 

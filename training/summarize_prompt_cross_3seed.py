@@ -9,8 +9,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from paths import EXPERIMENTS_DIR
 
-ROOT = Path("/root/autodl-fs/sft_experiments")
+
+ROOT = EXPERIMENTS_DIR
 RESULTS_DIR = ROOT / "prompt_cross_3seed" / "comparison"
 SEEDS = (42, 1, 2)
 DATASETS = ("stage1", "manual")

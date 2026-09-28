@@ -11,6 +11,8 @@ from torch.utils.data import DataLoader, Dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer, get_cosine_schedule_with_warmup
 from peft import PeftModel
 
+from paths import EXPERIMENTS_DIR, BASE_MODEL
+
 CUR = Path(__file__).resolve().parent
 sys.path.insert(0, str(CUR))
 from prepare_sft_data import EKMAN_LABELS, NARRATIVE_INSTRUCTION, NARRATIVE_SYSTEM_PROMPT  # noqa: E402
@@ -73,9 +75,9 @@ def collate(batch, pad_id):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--variant", choices=["emotion", "shared"], required=True)
-    ap.add_argument("--base-model", default="/root/autodl-tmp/Meta-Llama-3-8B-Instruct")
-    ap.add_argument("--adapter", default="/root/autodl-fs/sft_experiments/models/narrative_lora_r8")
-    ap.add_argument("--train", default="/root/autodl-fs/sft_experiments/data/joint_train.jsonl")
+    ap.add_argument("--base-model", default=BASE_MODEL)
+    ap.add_argument("--adapter", default=str(EXPERIMENTS_DIR / "models" / "narrative_lora_r8"))
+    ap.add_argument("--train", default=str(EXPERIMENTS_DIR / "data" / "joint_train.jsonl"))
     ap.add_argument("--output", required=True)
     ap.add_argument("--epochs", type=float, default=1.0)
     ap.add_argument("--max-steps", type=int, default=-1)

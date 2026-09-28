@@ -11,6 +11,8 @@ from pathlib import Path
 
 import yaml
 
+from paths import PROJECT_ROOT, EXPERIMENTS_DIR
+
 
 def monitor_gpu(stop_event: threading.Event, samples: list[tuple[int, int]]) -> None:
     command = [
@@ -111,12 +113,12 @@ def main() -> None:
     parser.add_argument(
         "--base-config",
         type=Path,
-        default=Path("/root/autodl-tmp/beyond/training/configs/label_sft.yaml"),
+        default=PROJECT_ROOT / "training" / "configs" / "label_sft.yaml",
     )
     parser.add_argument(
         "--output-root",
         type=Path,
-        default=Path("/root/autodl-fs/sft_experiments/batch_probe/label"),
+        default=EXPERIMENTS_DIR / "batch_probe" / "label",
     )
     parser.add_argument("--batch-sizes", type=int, nargs="+", default=[1, 2, 4])
     parser.add_argument("--effective-batch-size", type=int, default=16)

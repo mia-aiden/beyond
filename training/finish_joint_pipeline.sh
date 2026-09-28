@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/paths.sh"
 
-PROJECT_ROOT="/root/autodl-tmp/beyond"
-FS_ROOT="/root/autodl-fs/sft_experiments"
+FS_ROOT="$EXPERIMENTS_DIR"
 MODEL_DIR="${FS_ROOT}/models/joint_lora_r8"
 LOG_PATH="${FS_ROOT}/logs/joint_finish_pipeline.log"
 ARTIFACT_ROOT="${FS_ROOT}/model_c_artifacts"
@@ -12,7 +12,7 @@ exec > >(tee -a "${LOG_PATH}") 2>&1
 
 echo "Model C finish pipeline started at $(date --iso-8601=seconds)"
 
-source /root/miniconda3/etc/profile.d/conda.sh
+source "$CONDA_SH"
 conda activate llamafactory
 export OMP_NUM_THREADS=8
 export HF_HUB_OFFLINE=1
