@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -uo pipefail
+CE=/root/autodl-fs/sft_experiments/soft_eval
+GOLD_S1=/root/autodl-fs/train_set_stage1_test_eval.csv
+GOLD_MAN=/root/autodl-fs/manual_test_ekman_eval.csv
+PR=/root/autodl-tmp/beyond
+FS=/root/autodl-fs/sft_experiments
+MB_S1=$FS/evaluation_direct/narrative/stage1_sft/evaluation/run_20260727_164624
+MB_MAN=$FS/evaluation_direct/narrative/manual_sft/evaluation/run_20260727_164858
+source /root/miniconda3/etc/profile.d/conda.sh
+conda activate vllm-eval
+export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=8
+
+echo "[soft2] metrics..."
+for v in emotion shared; do for ds in stage1 manual; do
+  gold=$GOLD_S1; [ "$ds" = manual ] && gold=$GOLD_MAN
+  python "$PR/evaluation/src/run_eval.py" --gold "$gold" --pred "$CE/$v/$ds/predictions/pred.csv" \
+    --run-defaults "$PR/training/configs/run_narrative_eval.yaml" --output-root "$CE/$v/$ds/evaluation"
+done; done
+
+rundir(){ ls -d "$1"/run_* 2>/dev/null | tail -1; }
+boot(){ [ -n "$1" ] && [ -n "$2" ] && python "$PR/training/paired_bootstrap_narrative.py" \
+  --model-a-run "$1" --model-b-run "$2" --model-a-name "$3" --model-b-name "$4" --dataset "$5" --output-dir "$6" >/dev/null 2>&1; }
+echo "[soft2] bootstrap..."
+for ds in stage1 manual; do
+  E=$(rundir "$CE/emotion/$ds/evaluation"); S=$(rundir "$CE/shared/$ds/evaluation")
+  MB=$MB_S1; [ "$ds" = manual ] && MB=$MB_MAN
+  boot "$E" "$S"  soft_emotion soft_shared "$ds" "$CE/bootstrap/emotion_vs_shared_$ds"
+  boot "$E" "$MB" soft_emotion model_b     "$ds" "$CE/bootstrap/emotion_vs_B_$ds"
+  boot "$S" "$MB" soft_shared  model_b     "$ds" "$CE/bootstrap/shared_vs_B_$ds"
+done
+
+{
+  echo "# Emotion soft-prompt on frozen Model B (narrative)"
+  echo "emotion = per-emotion vector (7); shared = single emotion-agnostic vector (control, same capacity). diff = A - B; DTW lower better."
+  for ds in stage1 manual; do
+    echo; echo "## ${ds}: emotion-soft vs shared-soft   [KEY - isolates emotion content]"
+    cat "$CE/bootstrap/emotion_vs_shared_$ds/PAIRED_BOOTSTRAP_REPORT.md" 2>/dev/null
+    echo; echo "## ${ds}: emotion-soft vs Model B"
+    cat "$CE/bootstrap/emotion_vs_B_$ds/PAIRED_BOOTSTRAP_REPORT.md" 2>/dev/null
+    echo; echo "## ${ds}: shared-soft vs Model B"
+    cat "$CE/bootstrap/shared_vs_B_$ds/PAIRED_BOOTSTRAP_REPORT.md" 2>/dev/null
+  done
+} > "$CE/SOFT_RESULTS.md"
+echo "[soft2] DONE -> $CE/SOFT_RESULTS.md"

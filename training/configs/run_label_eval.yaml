@@ -1,0 +1,9 @@
+automatic_metrics: false
+emotion_metrics: true
+inference_enabled: false
+judge_enabled: false
+manual_enabled: false
+argument_enabled: false
+default_gold_path: ""
+default_prediction_path: ""
+

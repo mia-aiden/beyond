@@ -1,6 +1,7 @@
 *.csv
 .env
 .venv/
+.cache/
 __pycache__/
 *.pyc
 /data/
@@ -20,3 +21,10 @@ Thumbs.db
 desktop.ini
 *.png
 outputs*
+
+# local experiment notes and old result files
+training/*.md
+!training/README.md
+training/*.docx
+training/statistical_tests/
+._*

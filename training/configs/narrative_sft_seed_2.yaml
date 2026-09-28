@@ -1,0 +1,53 @@
+### model
+model_name_or_path: /root/autodl-tmp/Meta-Llama-3-8B-Instruct
+trust_remote_code: false
+
+### method
+stage: sft
+do_train: true
+finetuning_type: lora
+lora_rank: 8
+lora_alpha: 16
+lora_dropout: 0.05
+lora_target: all
+
+### dataset
+dataset_dir: /root/autodl-fs/sft_experiments/data
+dataset: political_narrative_train
+eval_dataset: political_narrative_validation
+template: llama3
+cutoff_len: 1536
+overwrite_cache: true
+preprocessing_num_workers: 8
+dataloader_num_workers: 4
+
+### output
+output_dir: /root/autodl-fs/sft_experiments/model_b_multiseed/models/seed_2
+logging_steps: 10
+save_strategy: steps
+save_steps: 250
+save_total_limit: 2
+plot_loss: true
+overwrite_output_dir: false
+resume_from_checkpoint: /root/autodl-fs/sft_experiments/model_b_multiseed/models/seed_2/checkpoint-1750
+report_to: none
+
+### train
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 8
+per_device_eval_batch_size: 1
+learning_rate: 1.0e-4
+num_train_epochs: 3.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+weight_decay: 0.01
+bf16: true
+gradient_checkpointing: true
+eval_strategy: steps
+eval_steps: 250
+load_best_model_at_end: true
+metric_for_best_model: eval_loss
+greater_is_better: false
+seed: 2
+data_seed: 2
+ddp_timeout: 180000000
